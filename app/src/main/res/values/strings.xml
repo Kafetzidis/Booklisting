@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Book listing</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="no_books">No books loaded\nPlease search for a book using the search button on top </string>
+    <string name="book_image">Book Image</string>
+    <string name="search_books">Search books</string>
+    <string name="url1">https://www.googleapis.com/books/v1/volumes?q=search+</string>
+    <string name="url2"><![CDATA[&maxResults=40]]></string>
+    <string name="searchable_hint">Search books and authors</string>
+    <string name="searchable_label">Book listing</string>
+    <string name="by">by</string>
+    <string name="description">Description:</string>
+    <string name="publisher">Publisher:</string>
+    <string name="pages">Pages:</string>
+</resources>
