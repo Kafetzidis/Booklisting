@@ -4,18 +4,19 @@ import android.app.LoaderManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Loader;
-import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -25,24 +26,19 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Book>> {
 
     public static final String LOG_TAG = MainActivity.class.getName();
-
+    //URL for book data from the google books site
+    private static final String BASE_REQUEST_URL =
+            "https://www.googleapis.com/books/v1/volumes?";
     //Variable for the EmptyStateTextView
     private TextView mEmptyStateTextView;
-
-    //Part 1 of the URL for book data from the google books site
-    private String BASE_REQUEST_URL =
-            getString(R.string.url1);
-    //Part 2 of the URL for book data from the google books site
-    private String BASE_REQUEST_URL_2 =
-            getString(R.string.url2);
-    //The complete google books request url
-    private String url;
-
     //Adapter for the list of books
     private BookAdapter mAdapter;
 
     //Progress Bar
     private View loadingIndicator;
+
+    //URL for the Loader
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,11 +100,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             public boolean onQueryTextSubmit(String query) {
 
                 try {
-                    url = BASE_REQUEST_URL + URLEncoder.encode(query, "UTF-8") + BASE_REQUEST_URL_2;
-                    mEmptyStateTextView.setText("");
+                    URLEncoder.encode(query, "UTF-8");
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
+                Uri baseUri = Uri.parse(BASE_REQUEST_URL);
+                Uri.Builder uriBuilder = baseUri.buildUpon();
+
+                uriBuilder.appendQueryParameter("q", query);
+                uriBuilder.appendQueryParameter("maxResults", "40");
+                url = uriBuilder.toString();
 
                 // Get a reference to the LoaderManager, in order to interact with loaders.
                 LoaderManager loaderManager = getLoaderManager();
@@ -130,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 //Reset the adapter and restart the loader
                 mAdapter.clear();
                 loadingIndicator.setVisibility(View.VISIBLE);
+                mEmptyStateTextView.setText("");
                 getLoaderManager().restartLoader(1, null, MainActivity.this);
 
                 return true;
