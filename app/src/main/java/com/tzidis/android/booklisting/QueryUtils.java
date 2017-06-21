@@ -26,7 +26,8 @@ import static com.tzidis.android.booklisting.MainActivity.LOG_TAG;
 
 public final class QueryUtils {
 
-    String title;
+    private final static int READ_TIMEOUT_MILLISECONDS = 10000;
+    private final static int CONNECTION_TIMEOUT_MILLISECONDS = 15000;
 
     /**
      * Create a private constructor because no one should ever create a {@link QueryUtils} object.
@@ -87,8 +88,8 @@ public final class QueryUtils {
         InputStream inputStream = null;
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setReadTimeout(10000 /* milliseconds */);
-            urlConnection.setConnectTimeout(15000 /* milliseconds */);
+            urlConnection.setReadTimeout(READ_TIMEOUT_MILLISECONDS /* milliseconds */);
+            urlConnection.setConnectTimeout(CONNECTION_TIMEOUT_MILLISECONDS /* milliseconds */);
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
